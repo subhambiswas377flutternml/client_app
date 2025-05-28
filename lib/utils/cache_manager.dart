@@ -46,6 +46,25 @@ class CacheManager {
       return null;
     }
   }
+
+  Future<bool> removeAtIndex<T>(
+    String boxKey,
+    int index
+    ) async {
+    try{
+      final box = _hive.box<T>(boxKey);
+      final dataList = box.values.toList();
+
+      if(dataList.length-1<index){
+        return false;
+      }else{
+        box.deleteAt(index);
+        return true;
+      }
+    }catch(ex, _){
+      return false;
+    }
+  }
 }
 
 class CacheDtoAdapters {

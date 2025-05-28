@@ -247,8 +247,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   emailId: emailController.text.trim(),
                   address: addressController.text.trim(),
                   imagePath: imagePath,
-                  lat: 1.1,
-                  lang: 3.3,
+                  lat: lat,
+                  lang: lang,
                 ));
               }
             }),

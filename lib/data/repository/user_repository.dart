@@ -18,4 +18,13 @@ class UserRepository {
     final List<UserCacheModel>? data = await _cacheManager.getAll(HiveBoxKeys.userModelBoxKey);
     return data;
   }
+
+  Future<List<UserCacheModel>?> deleteUser(int index) async{
+    final isRemoved = await _cacheManager.removeAtIndex<UserCacheModel>(HiveBoxKeys.userModelBoxKey, index);
+    if(isRemoved){
+      return await getAllData();
+    }else{
+      return null;
+    }
+  }
 }

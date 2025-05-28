@@ -1,13 +1,17 @@
 import 'dart:io';
 
 import 'package:customer_app/data/model/user_cache_model.dart';
+import 'package:customer_app/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:customer_app/utils/util_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserCard extends StatelessWidget {
   final UserCacheModel data;
+  final int index;
   const UserCard({
     required this.data,
+    required this.index,
     super.key,
     });
 
@@ -114,6 +118,13 @@ class UserCard extends StatelessWidget {
                   ),
                   child: Icon(Icons.near_me, color: Colors.purple,
                   )),
+              ),
+              SizedBox(height: 42,),
+              InkWell(
+                onTap: (){
+                  context.read<UserBloc>().add(DeleteUser(index: index));
+                },
+                child: Icon(Icons.delete_outline, color: Colors.red,),
               ),
             ],
           ),

@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return ListView.separated(
               physics: const BouncingScrollPhysics(),
                 itemBuilder: (_, index){
-                  return UserCard(data: data.elementAt(index),);
+                  return UserCard(data: data.elementAt(index), index: index,);
                 },
                 separatorBuilder: (_, index){
                   return const SizedBox(height: 30,);

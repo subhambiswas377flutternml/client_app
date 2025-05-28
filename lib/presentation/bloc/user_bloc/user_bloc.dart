@@ -42,5 +42,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserError());
       }
     });
+
+    on<DeleteUser>((event, emit) async {
+      emit(UserLoading());
+
+      final data = await _userRepository.deleteUser(event.index);
+      if(data!=null){
+        emit(UserLoaded(data: data));
+      }else{
+        emit(UserError());
+      }
+    });
   }
 }

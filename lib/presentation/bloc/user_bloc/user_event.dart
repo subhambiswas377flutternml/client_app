@@ -28,3 +28,11 @@ final class AddUser extends UserEvent{
   final double? lat;
   final double? lang;
 }
+
+final class DeleteUser extends UserEvent{
+  const DeleteUser({
+    required this.index
+  });
+
+  final int index;
+}
