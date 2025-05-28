@@ -7,7 +7,6 @@ import 'package:customer_app/utils/util_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AddUserScreen extends StatefulWidget {
   const AddUserScreen({super.key});
@@ -24,6 +23,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
   late String imagePath;
   late final GlobalKey<FormState> formKey;
   late bool showImageError;
+  late bool isLocationLoading;
+
+  late double? lat;
+  late double? lang;
 
   @override
   void initState(){
@@ -35,6 +38,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
     imagePath = "";
     formKey = GlobalKey<FormState>();
     showImageError = false;
+    isLocationLoading = false;
+
+    lat = null;
+    lang = null;
   }
 
   @override
@@ -59,25 +66,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 case UserLoading():
                   break;
                 case UserLoaded():
-                Fluttertoast.showToast(
-                    msg: "Added New User !",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.black,
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                );
+                UtilFunctions.showToast("Added New User !");
                 Navigator.of(context).pop();
                 case UserError():
-                  Fluttertoast.showToast(
-                    msg: "Something went wrong !",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.black,
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                );
-                context.read<UserBloc>().add(GetUser());
+                  UtilFunctions.showToast("Something went wrong !");
+                  context.read<UserBloc>().add(GetUser());
               }
             },
             builder: (context, state) => const SizedBox.shrink(),
@@ -182,17 +175,24 @@ class _AddUserScreenState extends State<AddUserScreen> {
             ),
             ],),
             SizedBox(height: 30,),
+
+            if(addressController.text.trim().isEmpty)...[
+            Text("Use auto detect feature", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400,
+                    ),),
+                    SizedBox(height: 10,),
+                    ],
             Row(
               children: [
                 Expanded(
                   child: CustomTextField(
                     controller: addressController,
+                    enabled: false,
                     label: "Address",
                     hint: "Enter address",
                     maxLines: 3,
                     validator: (val){
                       if(val==null||val.isEmpty){
-                        return "Enter address or auto-detect";
+                        return "Use auto-detect address";
                       }
                       return null;
                       },
@@ -200,8 +200,35 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 ),
                 SizedBox(width: 20,),
                 InkWell(
-                  onTap: (){},
-                  child: Icon(Icons.my_location, color: Colors.blue,),
+                  onTap: () async {
+                    setState(() {
+                      isLocationLoading = true;
+                    });
+
+                    final positionData = await UtilFunctions.getCurrentLocation();
+                    if(positionData!=null){
+                      lat = positionData.latitude;
+                      lang = positionData.longitude;
+
+                      final geoAddress = await UtilFunctions.getPlaceFromLatLong(lat, lang);
+                      if(geoAddress!=null){
+                        addressController.text = geoAddress;
+                      }else{
+                        UtilFunctions.showToast("Could'nt fetch address, try again !");
+                      }
+                    }
+
+                    setState(() {
+                      isLocationLoading = false;
+                    });
+                  },
+                  child: isLocationLoading? SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  ):Icon(Icons.my_location, color: Colors.blue,),
                   )
               ],
             ),
@@ -213,7 +240,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   showImageError = true;
                 });
               }
-    
               if(isValidated&&imagePath.isNotEmpty){
                 context.read<UserBloc>(). add(AddUser(
                   name: nameController.text.trim(),

@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
+  final bool enabled;
   const CustomTextField({
     this.hint,
     this.label,
@@ -21,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,
     this.maxLength,
+    this.enabled = true,
     super.key
     });
 
@@ -34,12 +36,15 @@ class CustomTextField extends StatelessWidget {
         return TextFormField(
                     controller: controller,
                     obscureText: showPswd,
+                    enabled: enabled,
                     maxLines: maxLines,
                     keyboardType: keyboardType,
                     inputFormatters: inputFormatters,
                     maxLength: maxLength,
+                    style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       labelText: label,
+                      labelStyle: enabled? null:TextStyle(color: Colors.black),
                       hintText: hint,
                       counter: const SizedBox.shrink(),
                       suffixIcon: isPswd? InkWell(
@@ -49,6 +54,8 @@ class CustomTextField extends StatelessWidget {
                         child: Icon(Icons.visibility),
                         ):null,
                       border: OutlineInputBorder(),
+                      disabledBorder: OutlineInputBorder(),
+                      errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
                     ),
                     validator: (value) {
                       return validator.call(value);

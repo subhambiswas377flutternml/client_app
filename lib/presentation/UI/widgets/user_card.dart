@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:customer_app/data/model/user_cache_model.dart';
+import 'package:customer_app/utils/util_functions.dart';
 import 'package:flutter/material.dart';
 
 class UserCard extends StatelessWidget {
@@ -102,7 +103,9 @@ class UserCard extends StatelessWidget {
             children: [
               SizedBox(height: 6,),
               InkWell(
-                onTap: (){},
+                onTap: () async {
+                  await UtilFunctions.launchGoogleMaps(data.lat, data.lang);
+                },
                 child: Container(
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
