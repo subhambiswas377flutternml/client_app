@@ -65,6 +65,16 @@ class CacheManager {
       return false;
     }
   }
+
+  Future<bool> clearBox<T>(String boxKey) async{
+    try{
+      final box = _hive.box<T>(boxKey);
+      box.clear();
+      return true;
+    }catch(ex, _){
+      return false;
+    }
+  }
 }
 
 class CacheDtoAdapters {
