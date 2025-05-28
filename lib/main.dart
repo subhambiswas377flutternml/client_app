@@ -1,6 +1,8 @@
 import 'package:customer_app/presentation/UI/screens/landing_screen.dart';
+import 'package:customer_app/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:customer_app/utils/cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,9 +15,14 @@ class App extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LandingScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_)=>UserBloc()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: LandingScreen(),
+      ),
     );
   }
 }

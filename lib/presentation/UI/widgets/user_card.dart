@@ -1,7 +1,14 @@
+import 'dart:io';
+
+import 'package:customer_app/data/model/user_cache_model.dart';
 import 'package:flutter/material.dart';
 
 class UserCard extends StatelessWidget {
-  const UserCard({super.key});
+  final UserCacheModel data;
+  const UserCard({
+    required this.data,
+    super.key,
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,7 @@ class UserCard extends StatelessWidget {
           // Image
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: Image(image: NetworkImage("https://fastly.picsum.photos/id/244/4288/2848.jpg?hmac=R6j9PBP4aBk2vcEIoOPU4R_nuknizryn2Vq8GGtWTrM"),
+            child: Image(image: FileImage(File(data.photoPath??"")),
               height: 100,
               width: 100,
               fit: BoxFit.fill,
@@ -32,7 +39,7 @@ class UserCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // name
-                Text("Alex Macias",
+                Text(data.name??"",
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 16,
@@ -45,7 +52,7 @@ class UserCard extends StatelessWidget {
                     Icon(Icons.phone, size: 15,),
                     SizedBox(width: 6,),
                     Expanded(
-                      child: Text("9571867767",
+                      child: Text(data.phoneNumber??"",
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 14,
@@ -61,7 +68,7 @@ class UserCard extends StatelessWidget {
                     Icon(Icons.mail, size: 15,),
                     SizedBox(width: 6,),
                     Expanded(
-                      child: Text("alexm@gmail.com",
+                      child: Text(data.emailId??"",
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 14,
@@ -78,7 +85,7 @@ class UserCard extends StatelessWidget {
                     Icon(Icons.pin_drop, size: 15,),
                     SizedBox(width: 6,),
                     Expanded(
-                      child: Text("10/B, XYZ Road, West Bengal, 700122, India",
+                      child: Text(data.address??"",
                       maxLines: 2,
                         style: TextStyle(
                           fontSize: 14,

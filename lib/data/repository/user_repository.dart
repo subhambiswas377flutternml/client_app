@@ -5,9 +5,13 @@ import 'package:customer_app/utils/constants.dart';
 class UserRepository {
   final CacheManager _cacheManager = CacheManager();
 
-  Future<bool> storeUserData({required UserCacheModel data}) async {
+  Future<List<UserCacheModel>?> storeUserData({required UserCacheModel data}) async {
     final isSaved = await _cacheManager.insertData<UserCacheModel>(HiveBoxKeys.userModelBoxKey, data);
-    return isSaved;
+    if(isSaved){
+      return await getAllData();
+    }else{
+      return null;
+    }
   }
 
   Future<List<UserCacheModel>?> getAllData() async{
